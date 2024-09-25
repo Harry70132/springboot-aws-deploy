@@ -36,6 +36,7 @@ artifacts:
   files:
     - imagedefinitions.json
     - target/springboot-aws-deploy.jar
+    - taskdef.json
     - appspec.yaml
 
 env:
