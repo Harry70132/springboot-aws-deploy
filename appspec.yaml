@@ -1,9 +1,9 @@
 version: 0.0
 Resources:
-  - spring-demo-service: # Replace with your actual ECS service name
+  - TargetService:
       Type: AWS::ECS::Service
       Properties:
-        TaskDefinition: arn:aws:ecs:ap-south-1:529088255229:task-definition/spring-demo-task-def
+        TaskDefinition: "spring-demo-task-def"  # Ensure this matches your ECS task definition name
         LoadBalancerInfo:
-          ContainerName: springboot # Your container name in the task definition
-          ContainerPort: 8080 # The port your container listens on
+          ContainerName: "springboot"  # Your container name in the task definition
+          ContainerPort: 8080  # The port your container listens on
