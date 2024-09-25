@@ -2,6 +2,8 @@ version: 0.2
 phases:
   pre_build:
     commands:
+      - echo Logging in to Docker Hub...
+      - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
       - echo Logging in to Amazon ECR....
       - aws --version
       #- $(aws ecr get-login --region ap-south-1 --no-include-email)
@@ -35,3 +37,10 @@ artifacts:
     - imagedefinitions.json
     - target/springboot-aws-deploy.jar
     - appspec.yaml
+
+env:
+  variables:
+    REPOSITORY_URI: "529088255229.dkr.ecr.ap-south-1.amazonaws.com/springboot-demo-ecr"
+    IMAGE_TAG: "latest"
+    DOCKER_USERNAME: "hari796"
+    DOCKER_PASSWORD: "Hari@1234"
