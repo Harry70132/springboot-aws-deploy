@@ -9,12 +9,9 @@ phases:
       - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com
       - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com/springboot-demo-ecr  # Dynamic repository URI
       
-      # Ensure Git is available and clone the repository to get the commit ID
-      - echo "Cloning repository to retrieve commit ID..."
-      - git clone $CODEBUILD_SRC_DIR . # Clone the source to get full history
-      - git fetch --all
-      - IMAGE_TAG=$(git rev-parse --short HEAD)  # Get short Git commit ID (7 characters)
-      - echo "Git commit ID as IMAGE_TAG: $IMAGE_TAG"
+      # Use the build ID and extract the last 7 characters as the image tag
+      - IMAGE_TAG=$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}' | tail -c 8) # Get the last 7 characters
+      - echo "Using build ID as IMAGE_TAG: $IMAGE_TAG"
   
   build:
     commands:
