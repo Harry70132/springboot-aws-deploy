@@ -3,7 +3,7 @@
     "containerDefinitions": [
         {
             "name": "springboot",
-            "image": "<IMAGE URI>",
+            "image": "<ImageURI>",
             "cpu": 0,
             "portMappings": [
                 {
