@@ -7,7 +7,7 @@ phases:
       - echo Logging in to Amazon ECR....
       - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com
       - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com/springboot-demo-ecr  # Dynamic repository URI
-      - IMAGE_TAG=$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')  # Short tag from the build ID
+      - IMAGE_TAG=$(git rev-parse --short HEAD)  # Get short Git commit ID (7 characters)
   build:
     commands:
       - echo Build started on `date`
@@ -19,7 +19,7 @@ phases:
     commands:
       - echo Build completed on `date`
       - echo pushing to repo
-      - docker push $REPOSITORY_URI:$IMAGE_TAG  # Only pushing the short tag
+      - docker push $REPOSITORY_URI:$IMAGE_TAG  # Pushing the short Git commit ID tag
       - echo Writing image definitions file...
       - DOCKER_CONTAINER_NAME=springboot
       - printf '[{"name":"%s","imageUri":"%s"}]' $DOCKER_CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
