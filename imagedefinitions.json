@@ -1,0 +1,6 @@
+[
+    {
+        "name": "springboot",
+        "imageUri": "529088255229.dkr.ecr.ap-south-1.amazonaws.com/springboot-demo-ecr"
+    }
+]
