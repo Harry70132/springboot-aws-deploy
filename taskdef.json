@@ -1,5 +1,5 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:ap-south-1:529088255229:task-definition/spring-demo-task-def:6",
+    "taskDefinitionArn": "arn:aws:ecs:ap-south-1:529088255229:task-definition/spring-demo-task-def",
     "containerDefinitions": [
         {
             "name": "springboot",
