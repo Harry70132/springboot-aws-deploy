@@ -1,14 +1,9 @@
 version: 0.0
 Resources:
-  TargetService:
-    Type: AWS::ECS::Service
-    Properties:
-      Cluster: "spring-cluster"  # Specify your ECS cluster name
-      TaskDefinition: "arn:aws:ecs:ap-south-1:529088255229:task-definition/spring-demo-task-def",  # Specify your task definition
-      DesiredCount: 1  # Specify the desired number of tasks
-      LaunchType: "FARGATE"  # Change to "EC2" if using EC2 launch type
-      ServiceName: "spring-demo-service"  # Specify your service name
-      LoadBalancers:
-        - ContainerName: "springboot"  # Your container name in the task definition
-          ContainerPort: 8080  # The port your container listens on
-          #TargetGroupArn: "<Your_Target_Group_ARN>"  # Specify your target group ARN
+  - spring-demo-service: # Replace with your actual ECS service name
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: arn:aws:ecs:ap-south-1:529088255229:task-definition/spring-demo-task-def
+        LoadBalancerInfo:
+          ContainerName: springboot # Your container name in the task definition
+          ContainerPort: 8080 # The port your container listens on
