@@ -4,7 +4,7 @@ Resources:
     Type: AWS::ECS::Service
     Properties:
       Cluster: "spring-cluster"  # Specify your ECS cluster name
-      TaskDefinition: "spring-demo-task-def"  # Specify your task definition
+      TaskDefinition: "arn:aws:ecs:ap-south-1:529088255229:task-definition/spring-demo-task-def",  # Specify your task definition
       DesiredCount: 1  # Specify the desired number of tasks
       LaunchType: "FARGATE"  # Change to "EC2" if using EC2 launch type
       ServiceName: "spring-demo-service"  # Specify your service name
