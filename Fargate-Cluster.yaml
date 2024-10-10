@@ -4,10 +4,16 @@ Description: The CloudFormation template for the Fargate ECS Cluster.
 Parameters:
   Stage:
     Type: String
+    Default: dev
   ContainerPort:
     Type: Number
+    Default: 8080
   ImageURI:
     Type: String
+    Default: 529088255229.dkr.ecr.us-east-1.amazonaws.com/blue-green-repo
+  AccountId:
+    Type: String
+    Default: 529088255229
 
 Resources:
 
