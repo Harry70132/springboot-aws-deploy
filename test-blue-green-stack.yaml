@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation Template to Create an S3 Bucket
+
+Parameters:
+  BucketName:
+    Description: Name of the S3 bucket
+    Type: String
+    Default: test-blue-green-796
+    MinLength: 1
+    MaxLength: 63
+    AllowedPattern: '^[a-z0-9.-]*$'
+    ConstraintDescription: Must be a valid S3 bucket name (lowercase letters, numbers, hyphens, and periods only).
+
+Resources:
+  MyS3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Ref BucketName
+      VersioningConfiguration:
+        Status: Enabled
+
+Outputs:
+  BucketName:
+    Description: Name of the created S3 bucket
+    Value: !Ref MyS3Bucket
