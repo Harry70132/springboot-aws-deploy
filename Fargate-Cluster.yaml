@@ -118,6 +118,14 @@ Resources:
           PortMappings:
             - ContainerPort: !Ref ContainerPort
               HostPort: !Ref ContainerPort
+          HealthCheck:
+            Command:
+              - CMD-SHELL
+              - curl -f http://localhost:8080/actuator/health || exit 1
+            Interval: 30
+            Timeout: 5
+            Retries: 3
+            StartPeriod: 10
 
   # Creat a security group for load balancer and open port 80 in bound from internet
   LoadBalancerSecurityGroup:
@@ -126,9 +134,9 @@ Resources:
       GroupDescription: !Join ['-', [!Ref Stage, !Ref 'AWS::AccountId', 'LoadBalancerSecurityGroup']]
       VpcId: !Ref VPC
       SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
+        - IpProtocol: -1 #tcp
+          FromPort: 0 #80
+          ToPort: 65535 #80
           CidrIp: 0.0.0.0/0
 
   # Creat a security group for Containers and open in bound Container port from Load balancer security group to the Container 
@@ -162,10 +170,11 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       Name: !Join ['-', [!Ref Stage, !Ref 'AWS::AccountId', 'TargetGroup']]
-      Port: 80
+      Port: 8080
       Protocol: HTTP
       TargetType: ip
       VpcId: !Ref VPC
+      HealthCheckPath: /actuator/health
 
   # Create a LoadBalancerListener and attach the TargetGroup and LoadBalancer
   LoadBalancerListener:
