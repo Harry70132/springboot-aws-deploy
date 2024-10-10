@@ -38,7 +38,7 @@ artifacts:
     - target/springboot-aws-deploy.jar
     - taskdef.json
     - appspec.yaml
-    - **/*
+    - '**/*'
 
 env:
   variables:
