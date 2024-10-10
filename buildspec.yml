@@ -2,16 +2,16 @@ version: 0.2
 phases:
   pre_build:
     commands:
+      - export AWS_REGION="us-east-1"  # Change as needed
+      - export AWS_ACCOUNT_ID="529088255229"
       - echo Logging in to Docker Hub...
       - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
       - echo Logging in to Amazon ECR....
       - aws --version
       #- $(aws ecr get-login --region ap-south-1 --no-include-email)
       #- aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 529088255229.dkr.ecr.ap-south-1.amazonaws.com
-      - AWS_REGION=$(aws configure get region)
-      - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com      - # Replace with this to your repository URI
-      - REPOSITORY_URI=529088255229.dkr.ecr.ap-south-1.amazonaws.com/blue-green-repo
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
+      - REPOSITORY_URI=529088255229.dkr.ecr.$AWS_REGION.amazonaws.com/blue-green-repo
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}' | tail -c 13)
   build:
     commands:
@@ -44,7 +44,7 @@ artifacts:
 
 env:
   variables:
-    REPOSITORY_URI: "529088255229.dkr.ecr.ap-south-1.amazonaws.com/springboot-demo-ecr"
+    REPOSITORY_URI: "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/springboot-demo-ecr"
     IMAGE_NAME: "springboot-demo-ecr"
     DOCKER_USERNAME: "hari796"
     DOCKER_PASSWORD: "Hari@1234"
