@@ -16,6 +16,7 @@ phases:
   build:
     commands:
       - echo Build started on `date`
+      - ls -lR
       - echo building the Jar file
       - mvn clean install
       - echo Building the Docker image...
@@ -34,6 +35,7 @@ phases:
       - echo $DOCKER_CONTAINER_NAME
       - echo printing imagedefinitions.json
       - cat imagedefinitions.json
+      - ls -lR
 artifacts:
   files:
     - imagedefinitions.json
