@@ -30,6 +30,9 @@ Resources:
       CidrBlock: 172.10.0.0/16
       EnableDnsHostnames: True
       EnableDnsSupport: True
+      Tags:
+        - Key: Name
+          Value: test-vpc
 
   # Create a Subnet
   SubnetA:
