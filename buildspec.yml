@@ -5,7 +5,7 @@ env:
 phases:
   pre_build:
     commands:
-      - COMMIT_ID=$(echo $CODEBUILD_BUILD_ARN | awk -F ':' '{print $NF}')
+      - COMMIT_ID=$(echo $CODEBUILD_BUILD_ARN | awk -F ':' '{print $NF}' | tail -c 7)
       - export AWS_REGION="us-east-1"  # Change as needed
       - export AWS_ACCOUNT_ID="529088255229"
       - echo Logging in to Docker Hub...
@@ -26,7 +26,7 @@ phases:
       - mvn clean install
       - echo Building the Docker image...
       - docker image build -t $REPOSITORY_URI:$COMMIT_ID .
-      - docker tag $REPOSITORY_URI:$COMMIT_ID $REPOSITORY_URI:latest
+      - docker image tag $REPOSITORY_URI:$COMMIT_ID $REPOSITORY_URI:latest
   post_build:
     commands:
       - echo Build completed on `date`
