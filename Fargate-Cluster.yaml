@@ -8,6 +8,8 @@ Parameters:
   ContainerPort:
     Type: Number
     Default: 8080
+  ImageTag:
+    Type: String
   ImageURI:
     Type: String
     Default: 529088255229.dkr.ecr.us-east-1.amazonaws.com/blue-green-repo:latest
@@ -116,8 +118,8 @@ Resources:
       TaskRoleArn: !Ref ExecutionRole
       ExecutionRoleArn: !Ref ExecutionRole
       ContainerDefinitions:
-        - Name: !Join ['-', [!Ref Stage, !Ref 'AWS::AccountId', 'Container']]
-          Image: !Ref ImageURI
+        - Name: springboot  #!Join ['-', [!Ref Stage, !Ref 'AWS::AccountId', 'Container']]
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/blue-green-repo:${ImageTag}"  #!Ref ImageURI
           PortMappings:
             - ContainerPort: !Ref ContainerPort
               HostPort: !Ref ContainerPort
