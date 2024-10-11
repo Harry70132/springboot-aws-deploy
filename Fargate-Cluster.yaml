@@ -10,7 +10,7 @@ Parameters:
     Default: 8080
   ImageURI:
     Type: String
-    Default: 529088255229.dkr.ecr.us-east-1.amazonaws.com/blue-green-repo
+    Default: 529088255229.dkr.ecr.us-east-1.amazonaws.com/blue-green-repo:latest
   AccountId:
     Type: String
     Default: 529088255229
