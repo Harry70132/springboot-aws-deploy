@@ -1,7 +1,11 @@
 version: 0.2
+env:
+  exported-variables:
+    - COMMIT_ID
 phases:
   pre_build:
     commands:
+      - COMMIT_ID=$(echo $CODEBUILD_BUILD_ARN | awk -F ':' '{print $NF}')
       - export AWS_REGION="us-east-1"  # Change as needed
       - export AWS_ACCOUNT_ID="529088255229"
       - echo Logging in to Docker Hub...
@@ -12,7 +16,8 @@ phases:
       #- aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 529088255229.dkr.ecr.ap-south-1.amazonaws.com
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
       - REPOSITORY_URI=529088255229.dkr.ecr.$AWS_REGION.amazonaws.com/blue-green-repo
-      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}' | tail -c 13)
+      #- IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}' | tail -c 13)
+      - echo "[INFO] New COMMIT_ID is :" $COMMIT_ID
   build:
     commands:
       - echo Build started on `date`
@@ -20,18 +25,18 @@ phases:
       - echo building the Jar file
       - mvn clean install
       - echo Building the Docker image...
-      - docker image build -t $REPOSITORY_URI:latest .
-      - docker image tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      - docker image build -t $REPOSITORY_URI:$COMMIT_ID .
+      - docker tag $REPOSITORY_URI:$COMMIT_ID $REPOSITORY_URI:latest
   post_build:
     commands:
       - echo Build completed on `date`
       - echo pushing to repo
+      - docker push $REPOSITORY_URI:$COMMIT_ID
       - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Writing image definitions file...
       # Give your container name
       - DOCKER_CONTAINER_NAME=springboot
-      - printf '[{"name":"%s","imageUri":"%s"}]' $DOCKER_CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":"%s","imageUri":"%s"}]' $DOCKER_CONTAINER_NAME $REPOSITORY_URI:$COMMIT_ID > imagedefinitions.json
       - echo $DOCKER_CONTAINER_NAME
       - echo printing imagedefinitions.json
       - cat imagedefinitions.json
@@ -39,7 +44,6 @@ phases:
 artifacts:
   files:
     - imagedefinitions.json
-    - target/springboot-aws-deploy.jar
     - taskdef.json
     - appspec.yaml
     - test-blue-green-stack.yaml
@@ -47,7 +51,7 @@ artifacts:
 
 env:
   variables:
-    REPOSITORY_URI: "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/springboot-demo-ecr"
+    REPOSITORY_URI: "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/blue-green-repo"
     IMAGE_NAME: "springboot-demo-ecr"
     DOCKER_USERNAME: "hari796"
     DOCKER_PASSWORD: "Hari@1234"
